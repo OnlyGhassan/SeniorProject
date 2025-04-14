@@ -1,0 +1,146 @@
+CREATE DATABASE SeniorProjectDB;
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE Interviewee (
+    Interviewee_ID NVARCHAR(255) PRIMARY KEY,
+    Interviewee_FIRST_NAME NVARCHAR(50) NOT NULL,
+    Interviewee_MIDDLE_NAME NVARCHAR(50) NULL,
+    Interviewee_LAST_NAME NVARCHAR(50) NOT NULL,
+    Interviewee_CV_TEXT NVARCHAR(MAX)  -- can contain more than 1000 words
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE Interview (
+    Interview_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Interviewee_ID NVARCHAR(255) NOT NULL,  -- foreign key to Interviewee
+    Interview_REPORT_TEXT NVARCHAR(MAX),  -- may have more than 1000 words
+    Interview_SPECIALTY NVARCHAR(100) NULL,
+    CONSTRAINT FK_Interview_Interviewee FOREIGN KEY (Interviewee_ID)
+        REFERENCES Interviewee(Interviewee_ID)
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE HRQuestion (
+    HRQuestion_ID INT IDENTITY (1,1) PRIMARY KEY,
+    HRQuestion_QUESTION NVARCHAR(1000) NOT NULL
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE BeginnerQuestions (
+    BeginnerQuestions_ID INT IDENTITY (1,1) PRIMARY KEY,
+	BeginnerQuestions_SPECIALTY NVARCHAR(100) NULL,
+    BeginnerQuestions_QUESTION NVARCHAR(1000) NOT NULL,
+    BeginnerQuestions_ANSWER NVARCHAR(1000) NOT NULL
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE IntermediateQuestion  (
+    IntermediateQuestion_ID INT IDENTITY (1,1) PRIMARY KEY,
+	IntermediateQuestion_SPECIALTY NVARCHAR(100) NULL,
+    IntermediateQuestion_QUESTION NVARCHAR(1000) NOT NULL,
+    IntermediateQuestion_ANSWER NVARCHAR(1000) NOT NULL
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE AdvancedQuestion  (
+    AdvancedQuestion_ID INT IDENTITY (1,1) PRIMARY KEY,
+	AdvancedQuestion_SPECIALTY NVARCHAR(100) NULL,
+    AdvancedQuestion_QUESTION NVARCHAR(1000) NOT NULL,
+    AdvancedQuestion_ANSWER NVARCHAR(1000) NOT NULL
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE Interview_HRQuestion (
+    Interview_ID INT NOT NULL,
+    HRQuestion_ID INT NOT NULL,
+    CONSTRAINT PK_Interview_HRQuestion PRIMARY KEY (Interview_ID, HRQuestion_ID),
+    CONSTRAINT FK_IHQ_Interview FOREIGN KEY (Interview_ID)
+        REFERENCES Interview(Interview_ID),
+    CONSTRAINT FK_IHQ_HRQuestion FOREIGN KEY (HRQuestion_ID)
+        REFERENCES HRQuestion(HRQuestion_ID)
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE Interview_BeginnerQuestions (
+    Interview_ID INT NOT NULL,
+    BeginnerQuestions_ID INT NOT NULL,
+    CONSTRAINT PK_Interview_BeginnerQuestions PRIMARY KEY (Interview_ID, BeginnerQuestions_ID),
+    CONSTRAINT FK_IEQ_Interview FOREIGN KEY (Interview_ID)
+        REFERENCES Interview(Interview_ID),
+    CONSTRAINT FK_IEQ_BeginnerQuestions FOREIGN KEY (BeginnerQuestions_ID)
+        REFERENCES BeginnerQuestions(BeginnerQuestions_ID)
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE Interview_IntermediateQuestion (
+    Interview_ID INT NOT NULL,
+    IntermediateQuestion_ID INT NOT NULL,
+    CONSTRAINT PK_Interview_IntermediateQuestion PRIMARY KEY (Interview_ID, IntermediateQuestion_ID),
+    CONSTRAINT FK_IIQ_Interview FOREIGN KEY (Interview_ID)
+        REFERENCES Interview(Interview_ID),
+    CONSTRAINT FK_IIQ_IntermediateQuestion FOREIGN KEY (IntermediateQuestion_ID)
+        REFERENCES IntermediateQuestion(IntermediateQuestion_ID)
+);
+GO
+
+---------------------------------------------------------------------------
+
+USE SeniorProjectDB;
+GO
+
+CREATE TABLE Interview_AdvancedQuestion (
+    Interview_ID INT NOT NULL,
+    AdvancedQuestion_ID INT NOT NULL,
+    CONSTRAINT PK_Interview_AdvancedQuestion PRIMARY KEY (Interview_ID, AdvancedQuestion_ID),
+    CONSTRAINT FK_IAQ_Interview FOREIGN KEY (Interview_ID)
+        REFERENCES Interview(Interview_ID),
+    CONSTRAINT FK_IAQ_AdvancedQuestion FOREIGN KEY (AdvancedQuestion_ID)
+        REFERENCES AdvancedQuestion(AdvancedQuestion_ID)
+);
+GO
+
+
