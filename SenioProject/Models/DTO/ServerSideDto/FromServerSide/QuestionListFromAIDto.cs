@@ -7,6 +7,6 @@ namespace SenioProject.Models.DTO.ServerSideDto.FromServerSide
 {
     public class QuestionListFromAIDto
     {
-       public List<QuestionFromAIDto> QuestionListFromAI { get; set; } 
+       public List<QuestionFromAIOrDatabaseDto> QuestionListFromAI { get; set; } 
     }
 }

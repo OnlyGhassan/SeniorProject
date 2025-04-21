@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj": {}
+    "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj": {
+    "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj",
+        "projectUniqueName": "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj",
         "projectName": "SenioProject",
-        "projectPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj",
+        "projectPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj",
         "packagesPath": "C:\\Users\\onlyg\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\obj\\",
+        "outputPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\onlyg\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -53,6 +53,10 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[9.0.4, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

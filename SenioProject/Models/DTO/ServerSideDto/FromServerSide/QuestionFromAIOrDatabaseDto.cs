@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace SenioProject.Models.DTO.ServerSideDto.FromServerSide
 {
-    public class CVQuestionFromAIDto
+    public class QuestionFromAIOrDatabaseDto
     {
-        public int QuestionNumber { get; set; }
         public string Question { get; set; }
-
+        public String? AppropriateAnswer { get; set; }
     }
 }

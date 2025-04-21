@@ -1,11 +1,9 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SenioProject.Mappers;
-using SenioProject.Models;
 using SenioProject.Models.DTO.BothSideDto;
 using SenioProject.Models.DTO.FromVRSideDto;
-using SenioProject.Models.DTO.ServerSideDto.FromServerSide;
 using SenioProject.Repositories;
+using SenioProject.Services;
 
 
 namespace SenioProject.Controllers;
@@ -15,9 +13,11 @@ namespace SenioProject.Controllers;
     public class HomeController : ControllerBase
     {
         private  IntervieweeDataRepository _IntervieweeDataRepository;
-        public HomeController(IntervieweeDataRepository intervieweeDataRepository)
+        private StartInterviewService _StartInterviewService;
+        public HomeController(IntervieweeDataRepository intervieweeDataRepository, StartInterviewService startInterviewService)
         {
             _IntervieweeDataRepository = intervieweeDataRepository;
+            _StartInterviewService = startInterviewService;
         }    
 
 
@@ -47,7 +47,7 @@ namespace SenioProject.Controllers;
                  return Ok("CV has been updated succesfully");
         }
 
-        [HttpDelete("DeleteCV")]
+        [HttpDelete("DeleteInterviewee")]
         public async Task<IActionResult> DeleteCV([FromBody] DeleteIntervieweeDto deleteIntervieweeDto){
 
             var IntervieweeObjectToUpdateCV = await _IntervieweeDataRepository.DeleteIntervieweeCVAsync(deleteIntervieweeDto);
@@ -59,14 +59,16 @@ namespace SenioProject.Controllers;
         }
 
         //POST api/interview/start
-        [HttpPost("start")]
-        public IActionResult StartInterview([FromBody] StartInterviewDto request)
+        [HttpPost("startInterview")]
+        public async Task<SuperListDto> StartInterview([FromBody] StartInterviewDto request)
         {
             // Validate the input
-            if (request == null)
-            {
-                return BadRequest("Invalid interview start data.");
-            }
+            // if (request == null)
+            // {
+            //     return BadRequest("Invalid interview start data.");
+            // }
+
+            var result = await _StartInterviewService.startInterview(request);
 
             // Simulate business logic:
             // For example, generate a set of questions with answers based on the candidate's specialty,
@@ -79,17 +81,17 @@ namespace SenioProject.Controllers;
             //     // Add more questions as needed.
             // };
             
-            var questions = new List<QuestionFromAIDto>();
+            //var questions = new List<QuestionFromAIDto>();
             // Return the list of questions to the candidate
-            return Ok(questions);
+            return result;
         }
 
         // POST api/interview/end
-        [HttpPost("end")]
-        public IActionResult EndInterview([FromBody] SuperDto request)
+        [HttpPatch("endInterview")]
+        public IActionResult EndInterview([FromBody] SuperListDto request)
         {
             // Validate candidate answers
-            if (request == null || request.CandidateAnswer == null || !request.CandidateAnswer.Any())
+            if (request == null )
             {
                 return BadRequest("Invalid candidate answers.");
             }

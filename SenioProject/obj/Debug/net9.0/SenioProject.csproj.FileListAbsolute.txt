@@ -234,3 +234,5 @@ C:\Users\onlyg\Downloads\SenioProject\SenioProject\obj\Debug\net9.0\refint\Senio
 C:\Users\onlyg\Downloads\SenioProject\SenioProject\obj\Debug\net9.0\SenioProject.pdb
 C:\Users\onlyg\Downloads\SenioProject\SenioProject\obj\Debug\net9.0\SenioProject.genruntimeconfig.cache
 C:\Users\onlyg\Downloads\SenioProject\SenioProject\obj\Debug\net9.0\ref\SenioProject.dll
+C:\Users\onlyg\Downloads\SenioProject\senioProject\obj\Debug\net9.0\SenioProject.sourcelink.json
+C:\Users\onlyg\Downloads\SenioProject\senioproject\bin\Debug\net9.0\Newtonsoft.Json.dll

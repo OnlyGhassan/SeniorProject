@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SenioProject.Models;
 using SenioProject.Repositories;
+using SenioProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +14,17 @@ builder =>
 });
 });
 
-builder.Services.AddDbContext<SeniorProjectDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("Ghassan")));
+builder.Logging.AddConsole(); // Already there in most templates
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Information);
 
+
+builder.Services.AddDbContext<SeniorProjectDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Ghassan")).EnableSensitiveDataLogging());
+
+        builder.Services.AddScoped<IntervieweeDataRepository>();
+        builder.Services.AddScoped<StartInterviewService>();
         builder.Services.AddScoped<StartInterviewRepository>();
+
 
 
 // builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

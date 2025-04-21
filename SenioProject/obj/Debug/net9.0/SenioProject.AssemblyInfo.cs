@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SenioProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3a4ce35b5164ef259b717b901f8546ead11beb5")]
 [assembly: System.Reflection.AssemblyProductAttribute("SenioProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SenioProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

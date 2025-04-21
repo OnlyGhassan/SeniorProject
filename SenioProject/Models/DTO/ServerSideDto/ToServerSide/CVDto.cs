@@ -8,5 +8,7 @@ namespace SenioProject.Models.DTO.ServerSideDto.ToServerSide
     public class CVDto
     {
         public String IntervieweeCvText { get; set; }
+        public int NumberOfCVQuestions { get; set; }
+
     }
 }
