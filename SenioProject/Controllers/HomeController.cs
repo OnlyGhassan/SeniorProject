@@ -14,10 +14,13 @@ namespace SenioProject.Controllers;
     {
         private  IntervieweeDataRepository _IntervieweeDataRepository;
         private StartInterviewService _StartInterviewService;
-        public HomeController(IntervieweeDataRepository intervieweeDataRepository, StartInterviewService startInterviewService)
+        private EndInterviewService _EndInterviewService;
+        public HomeController(IntervieweeDataRepository intervieweeDataRepository,
+         StartInterviewService startInterviewService, EndInterviewService endInterviewService)
         {
             _IntervieweeDataRepository = intervieweeDataRepository;
             _StartInterviewService = startInterviewService;
+            _EndInterviewService = endInterviewService;
         }    
 
 
@@ -60,13 +63,13 @@ namespace SenioProject.Controllers;
 
         //POST api/interview/start
         [HttpPost("startInterview")]
-        public async Task<SuperListDto> StartInterview([FromBody] StartInterviewDto request)
+        public async Task<IActionResult> StartInterview([FromBody] StartInterviewDto request)
         {
-            // Validate the input
-            // if (request == null)
-            // {
-            //     return BadRequest("Invalid interview start data.");
-            // }
+           // Validate the input
+            if (request == null)
+            {
+                return BadRequest("Invalid interview start data.");
+            }
 
             var result = await _StartInterviewService.startInterview(request);
 
@@ -83,12 +86,12 @@ namespace SenioProject.Controllers;
             
             //var questions = new List<QuestionFromAIDto>();
             // Return the list of questions to the candidate
-            return result;
+            return Ok(result);
         }
 
         // POST api/interview/end
-        [HttpPatch("endInterview")]
-        public IActionResult EndInterview([FromBody] SuperListDto request)
+        [HttpPost("endInterview")]
+        public async Task<IActionResult> EndInterview([FromBody] SuperListDto request)
         {
             // Validate candidate answers
             if (request == null )
@@ -106,9 +109,9 @@ namespace SenioProject.Controllers;
             //     Recommendations = "Review SOLID principles and design patterns."
             // };
 
-            var evaluationReport = new EvaluationReportDto();
+            var result = await _EndInterviewService.EndInterview(request);
 
             // Return the evaluation report to the candidate
-            return Ok(evaluationReport);
+            return Ok(result);
         }
     }

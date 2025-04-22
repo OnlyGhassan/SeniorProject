@@ -13,16 +13,16 @@ namespace SenioProject.Repositories
             _context = context;
         }
 
-        public async Task<String?> CreateIntervieweeAsync(Interview newIntrview)
-        {
-            // var testObeject = await _context.Interviewees.FirstOrDefaultAsync(x => x.IntervieweeId == newIntrviewee.IntervieweeId);
-            // if(testObeject != null)
-            // return null;
+        // public async Task<String?> CreateIntervieweeAsync(Interview newIntrview)
+        // {
+        //     // var testObeject = await _context.Interviewees.FirstOrDefaultAsync(x => x.IntervieweeId == newIntrviewee.IntervieweeId);
+        //     // if(testObeject != null)
+        //     // return null;
 
-            await _context.Interviews.AddAsync(newIntrview);
-            await _context.SaveChangesAsync();
-            return String.Empty;
-        }
+        //     await _context.Interviews.AddAsync(newIntrview);
+        //     await _context.SaveChangesAsync();
+        //     return String.Empty;
+        // }
 
         public async Task<String?> GetCVByID(String id)
         {

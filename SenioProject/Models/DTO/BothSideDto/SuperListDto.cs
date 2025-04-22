@@ -9,6 +9,7 @@ namespace SenioProject.Models.DTO.BothSideDto
     {
         public String FullName { get; set; }
        public String Specialty { get; set; }
+       public string IntervieweeId { get; set; }
        public List<SuperDto> SuperList { get; set; }
     }
 }
