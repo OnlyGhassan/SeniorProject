@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SenioProject.Models;
+using SenioProject.Models.DTO.BothSideDto;
 using SenioProject.Models.DTO.FromVRSideDto;
 using SenioProject.Models.DTO.ServerSideDto.ToServerSide;
 
@@ -47,6 +48,16 @@ namespace SenioProject.Mappers
             {
                 // InterviewId is auto incremented in the database!
                 IntervieweeCvText = interviewee.IntervieweeCvText
+            };
+        }
+
+        public static Interview ToInterview(this EvaluationReportDto evaluationReportDto, String specialty, String intervieweeId){
+            return new Interview
+            {
+                // InterviewId is auto incremented in the database!
+                InterviewReportText = evaluationReportDto.EvaluationReport,
+                InterviewSpecialty = specialty,
+                IntervieweeId = intervieweeId
             };
         }
 

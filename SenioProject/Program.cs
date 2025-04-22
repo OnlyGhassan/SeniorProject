@@ -24,6 +24,8 @@ builder.Services.AddDbContext<SeniorProjectDbContext>(options =>
         builder.Services.AddScoped<IntervieweeDataRepository>();
         builder.Services.AddScoped<StartInterviewService>();
         builder.Services.AddScoped<StartInterviewRepository>();
+         builder.Services.AddScoped<EndInterviewService>();
+        builder.Services.AddScoped<EndInterviewRepository>();
 
 
 

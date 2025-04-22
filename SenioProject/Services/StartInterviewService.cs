@@ -30,7 +30,7 @@ namespace SenioProject.Services
             QuestionNumberIncrementer = 1;
             superListDto = new SuperListDto();
 
-            int HRQuestionNumber = 10;
+            int HRQuestionNumber = 1;
             int CVQuestionNumber = 2;
             int PublicModelQuestionNumber = 7;
             int PrivateModelQuestionNumber = 0;
@@ -40,6 +40,7 @@ namespace SenioProject.Services
             {
                 FullName = await _startInterviewRepository.GetFullNameByID(startInterviewDto.IntervieweeId),
                 Specialty = startInterviewDto.Specialty,
+                IntervieweeId = startInterviewDto.IntervieweeId,
                 SuperList = new List<SuperDto>() // Initialize the list
             };
 
@@ -47,7 +48,7 @@ namespace SenioProject.Services
 
             await GenerateHRQuestion(HRQuestionNumber);
 
-            //await GenerateCVQuestionAsync(startInterviewDto.IntervieweeId, CVQuestionNumber);
+            await GenerateCVQuestionAsync(startInterviewDto.IntervieweeId, CVQuestionNumber);
 
 
 
