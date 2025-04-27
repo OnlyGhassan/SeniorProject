@@ -13,6 +13,9 @@ namespace SenioProject.Services
     public class StartInterviewService
     {
         private readonly StartInterviewRepository _startInterviewRepository;
+        private static readonly object _lock = new object();
+
+
 
         private readonly ILogger<StartInterviewService> _logger;
         public StartInterviewService(StartInterviewRepository startInterviewRepository, ILogger<StartInterviewService> logger)
@@ -30,11 +33,11 @@ namespace SenioProject.Services
             QuestionNumberIncrementer = 1;
             superListDto = new SuperListDto();
 
-            int HRQuestionNumber = 1;
-            int CVQuestionNumber = 2;
-            int PublicModelQuestionNumber = 7;
+            int HRQuestionNumber = 2;
+            int CVQuestionNumber = 3;
+            int PublicModelQuestionNumber = 10;
             int PrivateModelQuestionNumber = 0;
-            int DatabaseQuestionNumber = 7;
+            int DatabaseQuestionNumber = 10;
 
             superListDto = new SuperListDto
             {
@@ -65,12 +68,23 @@ namespace SenioProject.Services
             else if (startInterviewDto.QustionType == "Database")
             {
                 var generatequestionDto = startInterviewDto.ToGenerateQuestionDto(DatabaseQuestionNumber);
-                await GenerateDatabaseQuestion(generatequestionDto);
+                var hold = await GenerateDatabaseQuestion(generatequestionDto);
             }
-            // else if (startInterviewDto.QustionType == "Hybrid")
-            // {
-            //     // List<SuperListDto> PrivateModelResult = GeneratePrivateModelQuestion(generatequestionDto);
-            // }
+            else if (startInterviewDto.QustionType == "Hybrid")
+            {
+                
+                var generatequestionDto2 = startInterviewDto.ToGenerateQuestionDto(DatabaseQuestionNumber / 2);
+                var hold = await GenerateDatabaseQuestion(generatequestionDto2);
+
+                var generatequestionDto1 = startInterviewDto.ToGenerateQuestionDto(PublicModelQuestionNumber / 2);
+                await GeneratePublicModelQuestionAsync(generatequestionDto1);
+
+                // generatequestionDto = startInterviewDto.ToGenerateQuestionDto(PrivateModelQuestionNumber);
+                // await GeneratePrivateModelQuestion(generatequestionDto);
+
+                
+                
+            }
 
 
             await _startInterviewRepository.SaveChangesAsync();
@@ -137,7 +151,7 @@ namespace SenioProject.Services
                 // Check if the result or the list is null
                 if (result == null || result.CVQuestionListFromAI == null || result.CVQuestionListFromAI.Count == 0)
                 {
-                    Console.WriteLine("No questions returned from AI service.");
+                    Console.WriteLine("No questions returned from CV question generation service.");
                     throw new InvalidOperationException("No questions found in the response from the AI service.");
                 }
 
@@ -179,10 +193,10 @@ namespace SenioProject.Services
         //     throw new NotImplementedException();
         // }
 
-        private async Task GenerateDatabaseQuestion(GenerateQuestionDto generateQuestionDto)
+        private async Task<string> GenerateDatabaseQuestion(GenerateQuestionDto generateQuestionDto)
         {
 
-            int randomId;
+            
             QuestionFromAIOrDatabaseDto question = new QuestionFromAIOrDatabaseDto();
              for (int i = 0; i < generateQuestionDto.NumberOfQuestions; i++)
             {
@@ -209,6 +223,8 @@ namespace SenioProject.Services
                 }
             }
             await _startInterviewRepository.SaveChangesAsync();
+
+            return "";
         }
 
         private async Task GeneratePrivateModelQuestion(GenerateQuestionDto generateQuestionDto)
@@ -268,6 +284,13 @@ namespace SenioProject.Services
                 var responseJson = await response.Content.ReadAsStringAsync();
                 QuestionListFromAIDto result = JsonConvert.DeserializeObject<QuestionListFromAIDto>(responseJson);
 
+                if (result == null || result.QuestionListFromAI == null || result.QuestionListFromAI.Count == 0)
+                {
+                    Console.WriteLine("No questions returned from Specialty question generation service.");
+                    throw new InvalidOperationException("No questions found in the response from the AI service.");
+                }
+
+                
                 for (int i = 0; i < generateQuestionDto.NumberOfQuestions; i++)
                 {
 
