@@ -33,11 +33,11 @@ namespace SenioProject.Services
             QuestionNumberIncrementer = 1;
             superListDto = new SuperListDto();
 
-            int HRQuestionNumber = 1;
-            int CVQuestionNumber = 2;
+            int HRQuestionNumber = 0;
+            int CVQuestionNumber = 0;
             int PublicModelQuestionNumber = 9;
-            int PrivateModelQuestionNumber = 7;
-            int DatabaseQuestionNumber = 3;
+            int PrivateModelQuestionNumber = 1;
+            int DatabaseQuestionNumber = 9;
 
             superListDto = new SuperListDto
             {
@@ -238,7 +238,7 @@ namespace SenioProject.Services
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // POST it
-                var response = await httpClient.PostAsync("/generate-questions-Based-On-position", content);
+                var response = await httpClient.PostAsync("/generate-questions-Based-On-Private-Model", content);
                 response.EnsureSuccessStatusCode();
 
                 // Read response
