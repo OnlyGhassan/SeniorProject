@@ -21,7 +21,7 @@ from contextlib import asynccontextmanager
 
 # -------------------------------------------- API Settings --------------------------------------------
 API_URL = "https://api.openai.com/v1/chat/completions"
-OPENAI_API_KEY = "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"  # More secure: use environment variable
+OPENAI_API_KEY = "put your api key here"  # More secure: use environment variable
 MODEL = "gpt-4o-mini"  
 
 headers = {
@@ -194,7 +194,8 @@ async def generate_questions(request: PrivateModelQuestionRequest):
             "AppropriateAnswer": answer
         })
 
-    return results
+    # return results
+    return {"QuestionListFromAI": results}
 
 
 
@@ -427,7 +428,7 @@ def process_report(report: Report):
             f"AppropriateAnswer: {question.Appropriate_Questions}\n\n"
             f"Algorithm Score: {algorithm_score:.2f}\n"
             f"MiniLM Score: {miniLM_score:.2f}\n"
-            f"{MODEL} Score: {GPT_Model:.2f}\n\n"
+            f"Deep Seek Score: {GPT_Model:.2f}\n\n"
             f"Source: {question.Source}\n"
             f"Comment: {comment}\n\n\n*************************************************************************************************************************************************\n"
         )

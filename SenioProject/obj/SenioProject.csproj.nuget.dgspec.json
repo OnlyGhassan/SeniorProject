@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj": {}
+    "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj": {
+    "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj",
+        "projectUniqueName": "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj",
         "projectName": "SenioProject",
-        "projectPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\SenioProject.csproj",
+        "projectPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\SenioProject.csproj",
         "packagesPath": "C:\\Users\\onlyg\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\senioproject\\obj\\",
+        "outputPath": "C:\\Users\\onlyg\\Downloads\\SenioProject\\SenioProject\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\onlyg\\AppData\\Roaming\\NuGet\\NuGet.Config"
