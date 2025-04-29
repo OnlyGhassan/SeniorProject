@@ -39,6 +39,22 @@ namespace SenioProject.Repositories
     }
 
     public async Task<Interviewee?> DeleteIntervieweeCVAsync(DeleteIntervieweeDto deleteIntervieweeDto){
+        
+
+        while(true){
+
+            var IntervieweeReleatedObjectTodelete = await _context.Interviews.FirstOrDefaultAsync(x => x.IntervieweeId == deleteIntervieweeDto.IntervieweeId);
+
+            if (IntervieweeReleatedObjectTodelete == null)
+            break;
+
+            
+            _context.Interviews.Remove(IntervieweeReleatedObjectTodelete);
+            await _context.SaveChangesAsync();
+
+        }
+
+
         var IntervieweeObjectTodelete = await _context.Interviewees.FirstOrDefaultAsync(x => x.IntervieweeId == deleteIntervieweeDto.IntervieweeId);
 
         if(IntervieweeObjectTodelete == null)

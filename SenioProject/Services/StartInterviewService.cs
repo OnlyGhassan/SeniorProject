@@ -33,11 +33,11 @@ namespace SenioProject.Services
             QuestionNumberIncrementer = 1;
             superListDto = new SuperListDto();
 
-            int HRQuestionNumber = 2;
-            int CVQuestionNumber = 3;
-            int PublicModelQuestionNumber = 10;
-            int PrivateModelQuestionNumber = 0;
-            int DatabaseQuestionNumber = 10;
+            int HRQuestionNumber = 1;
+            int CVQuestionNumber = 2;
+            int PublicModelQuestionNumber = 9;
+            int PrivateModelQuestionNumber = 7;
+            int DatabaseQuestionNumber = 3;
 
             superListDto = new SuperListDto
             {
@@ -53,34 +53,34 @@ namespace SenioProject.Services
 
             await GenerateCVQuestionAsync(startInterviewDto.IntervieweeId, CVQuestionNumber);
 
-
+            var hold = "";
 
             if (startInterviewDto.QustionType == "PublicModel")
             {
                 var generatequestionDto = startInterviewDto.ToGenerateQuestionDto(PublicModelQuestionNumber);
-                await GeneratePublicModelQuestionAsync(generatequestionDto);
+                hold =await GeneratePublicModelQuestionAsync(generatequestionDto);
             }
             else if (startInterviewDto.QustionType == "PrivateModel")
             {
                 var generatequestionDto = startInterviewDto.ToGenerateQuestionDto(PrivateModelQuestionNumber);
-                await GeneratePrivateModelQuestion(generatequestionDto);
+                hold =await GeneratePrivateModelQuestion(generatequestionDto);
             }
             else if (startInterviewDto.QustionType == "Database")
             {
                 var generatequestionDto = startInterviewDto.ToGenerateQuestionDto(DatabaseQuestionNumber);
-                var hold = await GenerateDatabaseQuestion(generatequestionDto);
+                    hold = await GenerateDatabaseQuestion(generatequestionDto);
             }
             else if (startInterviewDto.QustionType == "Hybrid")
             {
                 
-                var generatequestionDto2 = startInterviewDto.ToGenerateQuestionDto(DatabaseQuestionNumber / 2);
-                var hold = await GenerateDatabaseQuestion(generatequestionDto2);
+                var generatequestionDto2 = startInterviewDto.ToGenerateQuestionDto(DatabaseQuestionNumber / 3);
+                    hold = await GenerateDatabaseQuestion(generatequestionDto2);
 
-                var generatequestionDto1 = startInterviewDto.ToGenerateQuestionDto(PublicModelQuestionNumber / 2);
-                await GeneratePublicModelQuestionAsync(generatequestionDto1);
+                var generatequestionDto1 = startInterviewDto.ToGenerateQuestionDto(PublicModelQuestionNumber / 3);
+                    hold = await GeneratePublicModelQuestionAsync(generatequestionDto1);
 
-                // generatequestionDto = startInterviewDto.ToGenerateQuestionDto(PrivateModelQuestionNumber);
-                // await GeneratePrivateModelQuestion(generatequestionDto);
+                var generatequestionDto3 = startInterviewDto.ToGenerateQuestionDto(PrivateModelQuestionNumber / 3);
+                    hold = await GeneratePrivateModelQuestion(generatequestionDto3);
 
                 
                 
@@ -227,7 +227,7 @@ namespace SenioProject.Services
             return "";
         }
 
-        private async Task GeneratePrivateModelQuestion(GenerateQuestionDto generateQuestionDto)
+        private async Task<string> GeneratePrivateModelQuestion(GenerateQuestionDto generateQuestionDto)
         {
             using (var httpClient = new HttpClient())
             {
@@ -264,9 +264,10 @@ namespace SenioProject.Services
 
 
             }
+            return "";
         }
 
-        private async Task GeneratePublicModelQuestionAsync(GenerateQuestionDto generateQuestionDto)
+        private async Task<string> GeneratePublicModelQuestionAsync(GenerateQuestionDto generateQuestionDto)
         {
             using (var httpClient = new HttpClient())
             {
@@ -310,6 +311,8 @@ namespace SenioProject.Services
 
 
             }
+
+            return "";
         }
 
         // private int GenerateRandomNumber()
