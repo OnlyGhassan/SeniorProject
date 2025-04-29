@@ -12,9 +12,10 @@ import requests
 from collections import Counter
 import os
 import torch
-from transformers import AutoTokenizer, LlamaForCausalLM
+from transformers import AutoTokenizer, LlamaForCausalLM, AutoModelForCausalLM
 from peft import PeftModel
 from peft import PeftModelForCausalLM
+from contextlib import asynccontextmanager
 
 
 
@@ -27,128 +28,55 @@ headers = {
     "Authorization": f"Bearer {OPENAI_API_KEY}",
     "Content-Type": "application/json"
 }
-# --------------------------------------------
 
+# -------------------------------------------- private model Settings --------------------------------------------
+
+print(torch.cuda.is_available())
+
+base_model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
+model = PeftModel.from_pretrained(base_model, "AbdulrahmanCS/Fine_Tune_output")
+tokenizer = AutoTokenizer.from_pretrained("AbdulrahmanCS/Fine_Tune_output")
+
+# app = FastAPI()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
+print(torch.cuda.get_device_name(0))
+
+
+# ----------------------------------------------------------------------------------------------------------------
 # Create app
 app = FastAPI()
 
+# Declare them first
+# sentence_model = None
+# base_model = None
+# model = None
+# tokenizer = None
 
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     global sentence_model, base_model, model, tokenizer
+#     import torch
+#     from transformers import AutoTokenizer, AutoModelForCausalLM
+#     from peft import PeftModel
+#     from sentence_transformers import SentenceTransformer
 
-# class QuestionRequest(BaseModel):
-#     NumberOfQuestion: int
-#     position: str
-#     level: str
+#     print(torch.cuda.is_available())
 
-# BASE = "C:/Users/onlyg/.cache/huggingface/hub/models--unsloth--Llama-3.2-1B"
-# ADAPTER = "C:/Users/onlyg/.cache/huggingface/hub/models--AbdulrahmanCS--Fine_Tune_output"
+#     base_model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
+#     model = PeftModel.from_pretrained(base_model, "AbdulrahmanCS/Fine_Tune_output")
+#     tokenizer = AutoTokenizer.from_pretrained("AbdulrahmanCS/Fine_Tune_output")
+#     sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# tokenizer = AutoTokenizer.from_pretrained(BASE, trust_remote_code=True)
-# model = AutoModelForCausalLM.from_pretrained(BASE, trust_remote_code=True)
+#     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#     model = model.to(device)
+#     print(torch.cuda.get_device_name(0))
 
-# base_model = LlamaForCausalLM.from_pretrained(BASE, local_files_only=True, torch_dtype=torch.float16)
+#     # Yield control back to FastAPI - everything is ready
+#     yield
 
-# BASE    = "unsloth/Llama-3.2-1B"
-# ADAPTER = "C:/Users/onlyg/.cache/huggingface/hub/models--AbdulrahmanCS--Fine_Tune_output"
+# app = FastAPI(lifespan=lifespan)
 
-# tokenizer  = AutoTokenizer.from_pretrained(BASE, use_fast=True)   
-# base_model = LlamaForCausalLM.from_pretrained(BASE)               
-# model      = PeftModel.from_pretrained(base_model, ADAPTER)
-
-# Load your local fine-tuned model
-# BASE = "unsloth/Llama-3.2-1B"
-# ADAPTER = "AbdulrahmanCS/Fine_Tune_output"
-
-# tokenizer = AutoTokenizer.from_pretrained(BASE, use_fast=True)
-# base_model = LlamaForCausalLM.from_pretrained(BASE)
-# # model = PeftModel.from_pretrained(base_model, ADAPTER)
-# model = PeftModelForCausalLM.from_pretrained(base_model, ADAPTER)
-
-# # --- only after model is loaded ---
-# from sentence_transformers import SentenceTransformer, util
-
-
-
-# # Generation function
-# def generate(prompt):
-#     inputs = tokenizer(prompt, return_tensors="pt")
-#     outputs = model.generate(**inputs, max_new_tokens=800, temperature=0.7)
-#     return tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-# # Define the PrivateModel endpoint
-# @app.post("/PrivateModel")
-# async def private_model(request: QuestionRequest):
-#     try:
-#         # prompt = (
-#         #     f"Generate a list of {request.NumberOfQuestion} interview questions with answers for a "
-#         #     f"{request.position} at a {request.level} level. The questions should focus on relevant "
-#         #     f"concepts for this position. The answers should be clear, concise, and appropriate for "
-#         #     f"the {request.level} difficulty level. Provide the list in JSON format, where each question "
-#         #     f"is associated with its answer."
-#         # )
-#         prompt = (
-#             f"Generate {request.NumberOfQuestion} interview questions with answers for a "
-#             f"{request.position} at a {request.level} level. "
-#             f"STRICT RULES: "
-#             f"- ONLY output JSON. "
-#             f"- NO extra text, NO greetings, NO explanations. "
-#             f"- Output as a JSON array of objects. Each object must have 'Question' and 'AppropriateAnswer' keys. "
-#             f"- Example format: "
-#             f"[{{'Question': 'What is Python?', 'AppropriateAnswer': 'Python is a programming language.'}}, "
-#             f"{{'Question': 'Explain OOP.', 'AppropriateAnswer': 'OOP means Object-Oriented Programming...'}}]"
-#                 )
-
-
-#         # Call your local model
-#         model_output = generate(prompt)
-
-#         # Try to parse model output as JSON
-#         try:
-#             data = json.loads(model_output)
-#         except json.JSONDecodeError:
-#             # Try to extract JSON block
-#             json_match = re.search(r'```json\s*([\s\S]*?)\s*```', model_output)
-#             if not json_match:
-#                 json_match = re.search(r'\{[\s\S]*\}', model_output)
-#             if not json_match:
-#                 raise HTTPException(status_code=500, detail="Could not extract JSON from model output")
-#             try:
-#                 payload = json_match.group(1) if '```json' in json_match.group(0) else json_match.group(0)
-#                 data = json.loads(payload)
-#             except json.JSONDecodeError:
-#                 raise HTTPException(status_code=500, detail="Failed to parse extracted JSON")
-
-#         # Normalize into a list of {question, answer} dicts
-#         if isinstance(data, dict) and "questions" in data:
-#             items = data["questions"]
-#         elif isinstance(data, list):
-#             items = data
-#         else:
-#             items = []
-#             for key, val in data.items():
-#                 if isinstance(val, dict) and "question" in val and "answer" in val:
-#                     items.append(val)
-#                 else:
-#                     items.append({
-#                         "question": key,
-#                         "answer": val if isinstance(val, str) else str(val)
-#                     })
-
-#         # Format output keys uniformly
-#         formatted = []
-#         for qa in items:
-#             q_text = qa.get("question") or qa.get("Question")
-#             a_text = qa.get("answer")   or qa.get("AppropriateAnswer")
-#             formatted.append({
-#                 "Question": q_text,
-#                 "AppropriateAnswer": a_text
-#             })
-
-#         return {"QuestionListFromAI": formatted}
-
-#     except HTTPException:
-#         raise
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Error generating questions: {e}")
 
 # generate-questions-Based-On-CV 
 #  --------------------------------------------
@@ -214,6 +142,65 @@ async def generate_questions(data: CVRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating questions: {str(e)}")
+#  --------------------------------------------
+#  --------------------------------------------
+
+# generate-questions-Based-On-Private-Model
+#  --------------------------------------------
+#  --------------------------------------------
+
+
+
+class PrivateModelQuestionRequest(BaseModel):
+    position: str = Field(alias="Specialty")
+    level: str = Field(alias="QuestionDifficulty")
+    NumberOfQuestion: int = Field(alias="NumberOfQuestions")
+
+    class Config:
+        allow_population_by_field_name = True
+        populate_by_name = True
+
+@app.post("/generate-questions-Based-On-Private-Model")
+async def generate_questions(request: PrivateModelQuestionRequest): 
+    prompt = f"Generate 1 {request.position} interview question with answer with difficulty {request.level}"
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+
+    results = []  # collect multiple questions
+
+    for _ in range(request.NumberOfQuestion):
+        model.eval()
+        with torch.no_grad():
+            outputs = model.generate(
+                input_ids=inputs["input_ids"],
+                max_new_tokens=100,
+                do_sample=True,
+                temperature=0.9,
+                top_p=0.8
+            )
+        decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+        pattern = r"Question:\s*(.*?)\s*Answer:\s*(.*)"
+        match = re.search(pattern, decoded, re.DOTALL)
+
+        if match:
+            question = match.group(1).strip()
+            answer = match.group(2).strip()
+        else:
+            question = ""
+            answer = ""
+
+        results.append({
+            "Question": question,
+            "AppropriateAnswer": answer
+        })
+
+    return results
+
+
+
+
+
+
 #  --------------------------------------------
 #  --------------------------------------------
 
@@ -415,6 +402,8 @@ def process_report(report: Report):
     report.Date = datetime.today().strftime('%Y-%m-%d (%A) %H:%M:%S')
     output = f"Name: {report.Name}\nSpecialty: {report.Specialty}\n\n"
 
+    
+
     for idx, question in enumerate(report.Questions, start=1):
 
         if question.Source in ["HR", "CV"]:
@@ -438,11 +427,13 @@ def process_report(report: Report):
             f"AppropriateAnswer: {question.Appropriate_Questions}\n\n"
             f"Algorithm Score: {algorithm_score:.2f}\n"
             f"MiniLM Score: {miniLM_score:.2f}\n"
-            f"Deep Seek Score: {GPT_Model:.2f}\n\n"
+            f"{MODEL} Score: {GPT_Model:.2f}\n\n"
             f"Source: {question.Source}\n"
-            f"Comment: {comment}\n\n\n*********************************************************\n"
+            f"Comment: {comment}\n\n\n*************************************************************************************************************************************************\n"
         )
 
+        
+    
     return {"EvaluationReport": output.strip()}
 
 #  --------------------------------------------
@@ -452,3 +443,61 @@ def process_report(report: Report):
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, port=8000)
+
+
+
+
+
+
+
+
+
+
+# @app.post("/report")
+# def process_report(report: Report):
+#     report.Date = datetime.today().strftime('%Y-%m-%d (%A) %H:%M:%S')
+#     outputHeader = f"Name: {report.Name}\nSpecialty: {report.Specialty}\n\n"
+
+#     avg1, avg2, avg3 = 0
+
+#     for idx, question in enumerate(report.Questions, start=1):
+
+#         if question.Source in ["HR", "CV"]:
+#             user_answer = question.UserAnswer
+#             appropriate_answer = "non"
+#             algorithm_score = 0
+#             miniLM_score = 0
+#             GPT_Model = 0
+#             comment = "There is no evaluation for HR and CV"
+#         else:
+#             user_answer = question.UserAnswer
+#             appropriate_answer = question.Appropriate_Questions
+#             algorithm_score = calculate_similarity_Based_On_algorithm(user_answer, appropriate_answer)
+#             miniLM_score = calculate_similarity_Based_On_MiniLM_Model(user_answer, appropriate_answer)
+#             GPT_Model, comment = calculate_similarity_Based_On_API(user_answer, appropriate_answer)
+
+#         output += (
+#             f"Question Number: {idx}\n"
+#             f"Question: {question.Question}\n\n"
+#             f"User Answer: {question.UserAnswer}\n\n"
+#             f"AppropriateAnswer: {question.Appropriate_Questions}\n\n"
+#             f"Algorithm Score: {algorithm_score:.2f}\n"
+#             f"MiniLM Score: {miniLM_score:.2f}\n"
+#             f"{MODEL} Score: {GPT_Model:.2f}\n\n"
+#             f"Source: {question.Source}\n"
+#             f"Comment: {comment}\n\n\n*************************************************************************************************************************************************\n"
+#         )
+
+#         avg1 += algorithm_score
+#         avg2 += miniLM_score
+#         avg3 += GPT_Model
+                                                                    
+#     outputHeader = (
+#         f"**************************************************       Agerage scores of all question      ***************************************************\n\n"
+#         f"              Average Algorithm Score: {avg1 / Question.QuestionNumber} , Average MiniLM Score: {avg2 / Question.QuestionNumber} , Average {MODEL} Score: \nSpecialty: {avg3 / Question.QuestionNumber}\n\n"
+#         f"*************************************************************************************************************************************************\n\n"
+#     )
+
+#     outputHeader += output
+    
+#     return {"EvaluationReport": outputHeader.strip()}
