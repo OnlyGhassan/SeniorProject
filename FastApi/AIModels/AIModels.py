@@ -10,12 +10,12 @@ import math
 import re
 import requests
 from collections import Counter
-import os
 import torch
 from transformers import AutoTokenizer, LlamaForCausalLM, AutoModelForCausalLM
 from peft import PeftModel
 from peft import PeftModelForCausalLM
 from contextlib import asynccontextmanager
+import os
 
 
 
@@ -46,37 +46,6 @@ print(torch.cuda.get_device_name(0))
 # ----------------------------------------------------------------------------------------------------------------
 # Create app
 app = FastAPI()
-
-# Declare them first
-# sentence_model = None
-# base_model = None
-# model = None
-# tokenizer = None
-
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     global sentence_model, base_model, model, tokenizer
-#     import torch
-#     from transformers import AutoTokenizer, AutoModelForCausalLM
-#     from peft import PeftModel
-#     from sentence_transformers import SentenceTransformer
-
-#     print(torch.cuda.is_available())
-
-#     base_model = AutoModelForCausalLM.from_pretrained("unsloth/Llama-3.2-1B")
-#     model = PeftModel.from_pretrained(base_model, "AbdulrahmanCS/Fine_Tune_output")
-#     tokenizer = AutoTokenizer.from_pretrained("AbdulrahmanCS/Fine_Tune_output")
-#     sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
-
-#     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-#     model = model.to(device)
-#     print(torch.cuda.get_device_name(0))
-
-#     # Yield control back to FastAPI - everything is ready
-#     yield
-
-# app = FastAPI(lifespan=lifespan)
-
 
 # generate-questions-Based-On-CV 
 #  --------------------------------------------
