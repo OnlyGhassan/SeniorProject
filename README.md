@@ -244,7 +244,7 @@ To run the full system correctly, start the services in this order:
 
 ```
 cd FastApi/AIModels
-fastapi run AIModels.py
+uvicorn AIModels:app
 ```
 
 ### 2. **.NET Core API**
