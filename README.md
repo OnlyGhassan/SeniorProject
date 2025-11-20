@@ -61,7 +61,7 @@ Follow the steps carefully to run the entire system.
 Open a terminal and run:
 
 ```bash
-git clone [<repo-url>](https://github.com/OnlyGhassan/SeniorProject.git)
+git clone https://github.com/OnlyGhassan/SeniorProject.git
 cd SeniorProject
 ```
 
