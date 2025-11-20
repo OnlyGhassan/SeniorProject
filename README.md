@@ -61,8 +61,8 @@ Follow the steps carefully to run the entire system.
 Open a terminal and run:
 
 ```bash
-git clone <repo-url>
-cd <repo-folder>
+git clone [<repo-url>](https://github.com/OnlyGhassan/SeniorProject.git)
+cd SeniorProject
 ```
 
 This downloads all project folders, including:
