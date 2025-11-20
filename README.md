@@ -111,6 +111,15 @@ This installs:
 
 ---
 
+you need to go to this file:
+
+SeniorProject/FastApi/AIModels/AIModels.py
+
+then put your API key in this variable 
+OPENAI_API_KEY = "past it in here"
+
+---
+
 # **3️⃣ Run the AI Model Service**
 
 ### **Step 1 — Move into the AIModels directory**
